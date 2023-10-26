@@ -1,9 +1,9 @@
 # !bin/bash
 
 movies_path="../Movies"
-movies_file="./movies.txt"
+movies_file="./Dump/movies.txt"
 series_path="../Series"
-series_file="./series.txt"
+series_file="./Dump/series.txt"
 
 rm -f $movies_file $series_file
 

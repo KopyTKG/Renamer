@@ -1,46 +1,16 @@
 import os
 from typing import Any
+from Queue import Queue
 
 os.system("./MoviesGrep.sh")
 
+Locations = {
+    "left": "left.txt",
+    "output": "./Dump/output.txt",
+    "movies": "./Dump/movies.txt",
+    "csv": "./Out/movies.csv"
+}
 
-class Queue:
-    def __init__(self, start=[]):
-        if not start:
-            self.__memory = []
-        else:
-            self.__memory = start
-
-    def set(self, array):
-        self.__memory = array
-
-    def push(self, item):
-        self.__memory.append(item)
-  
-    def pop(self) :
-        return self.__memory.pop(0)
-
-    def front(self):
-        if self.isEmpty():
-            return None
-        else:
-            return(self.__memory[0])
-    
-    def rear(self):
-        if self.isEmpty():
-            return None
-        else:
-            return(self.__memory[-1])
-    
-    def isEmpty(self):
-        return not self.__memory
-
-    def __len__(self):
-        return(len(self.__memory))
-    
-    def __iter__(self):
-        for item in self.__memory:
-            yield item
 
 class Movie():
     def __init__(self, title: str, year: int, quality: str):
@@ -78,21 +48,21 @@ def Main():
     setId = True
 
     # Creating output file if it doesn't exist
-    if not os.path.exists("output.txt"):
-        with open("output.txt", "w") as f:
+    if not os.path.exists(Locations["output"]):
+        with open(Locations["output"], "w") as f:
             pass
 
     # Creating left file if it doesn't exist
     # File is used to keep memory of untagged movies
-    if not os.path.exists("left.txt"):
-        with open("movies.txt", "r") as f:
+    if not os.path.exists(Locations["left"]):
+        with open(Locations["movies"], "r") as f:
             lines = f.read()
             left.set(lines.split("\n"))
-            with open("left.txt", "w") as w:
+            with open(Locations["left"], "w") as w:
                 for line in left:
                     w.write(line + "\n")
     else:
-        with open("left.txt", "r") as f:
+        with open(Locations["left"], "r") as f:
             lines = f.read()
             splitted = lines.split("\n")
             if len(splitted) > 1:
@@ -102,6 +72,7 @@ def Main():
                 print("No movies found")
 
     if setId:
+        movies = Queue()
         for _ in range(len(left)):
             line = left.pop()
             if line == "":
@@ -110,25 +81,26 @@ def Main():
                 print("No id found")
                 movie = getData(line)
                 addToClipBoard(movie.title)
-                try:
-                    movie.setId(int(input(f"set id for \"{movie.title}\":")))
-                except:
-                    pass
+                movie.setId(int(input(f"set id for \"{movie.title}\":")))
+                movies.push(movie)
             else:
                 ide = line.split("#")[1]  
                 movie = getData(line)
                 movie.setId(ide)
+                movies.push(movie)
     
-            with open("output.txt", "a") as W:
+            with open(Locations["left"], "w") as w:
+                for line in left:
+                    w.write(line + "\n")
+        
+        with open(Locations["output"], "a") as W:
+            for movie in movies:
                 W.write(str(movie) + "\n")
-                with open("left.txt", "w") as w:
-                    for line in left:
-                        w.write(line + "\n")
 
     # Creating Output CSV file     
-    with open("output.txt", "r") as f:
+    with open(Locations["output"], "r") as f:
         lines = f.read()
-        with open("movies.csv", "w") as w:
+        with open(Locations["csv"], "w") as w:
             w.write("id,title,year,quality\n")
             for line in lines.split("\n"):
                 if line == "":
