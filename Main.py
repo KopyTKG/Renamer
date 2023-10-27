@@ -1,6 +1,7 @@
 import os
 from typing import Any
 from Queue import Queue
+from Renamer import MoveFolders
 
 os.system("./MoviesGrep.sh")
 
@@ -8,7 +9,8 @@ Locations = {
     "left": "left.txt",
     "output": "./Dump/output.txt",
     "movies": "./Dump/movies.txt",
-    "csv": "./Out/movies.csv"
+    "csv": "./Out/movies.csv",
+    "base": "./movies"
 }
 
 
@@ -117,3 +119,4 @@ def Main():
 
 if __name__ == "__main__":
     Main()
+    MoveFolders(Locations["base"])
