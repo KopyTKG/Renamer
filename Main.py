@@ -115,9 +115,16 @@ def Main():
                 title = settitle(line[1])
                 quality = line[3]
                 w.write(f"{ide},{title},{year},{quality}\n")
-                #os.remove("left.txt")
+
+
+def CleanUp():
+    os.remove(Locations["left"])
+    os.remove(Locations["output"])
+    os.remove(Locations["movies"])
+    print(f"files ({Locations['left']}, {Locations['output']} {Locations['movies']}) were removed")
 
 if __name__ == "__main__":
     Main()
+    CleanUp()
     movies = LoadMovies(Locations["csv"])
     MoveFolders(Locations["base"], movies)
