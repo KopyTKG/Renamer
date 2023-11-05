@@ -10,6 +10,7 @@ def LoadMovies(file):
         for row in spamreader:
             movies.append(row)
     movies.pop(0)
+    return movies
 
 
 def MoveFolders(folder, movies):
@@ -23,5 +24,6 @@ def MoveFolders(folder, movies):
         OldName = f"{folder}/{title} ({year}) [{quality}]"
 
         if not os.path.exists(NewName):
+            print(f"moving {OldName} to {NewName}")
             os.rename(OldName, NewName)
 

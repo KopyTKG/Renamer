@@ -1,7 +1,7 @@
 import os
 from typing import Any
 from Queue import Queue
-from Renamer import MoveFolders
+from Renamer import MoveFolders, LoadMovies
 
 os.system("./MoviesGrep.sh")
 
