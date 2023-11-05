@@ -10,7 +10,7 @@ Locations = {
     "output": "./Dump/output.txt",
     "movies": "./Dump/movies.txt",
     "csv": "./Out/movies.csv",
-    "base": "./movies"
+    "base": "../Movies"
 }
 
 
@@ -119,4 +119,5 @@ def Main():
 
 if __name__ == "__main__":
     Main()
-    MoveFolders(Locations["base"])
+    movies = LoadMovies(Locations["csv"])
+    MoveFolders(Locations["base"], movies)

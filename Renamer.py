@@ -2,17 +2,17 @@ import os
 import csv
 
 
-movies = []
 
-with open('./Out/movies.csv', newline='') as csvfile:
-    spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
-    for row in spamreader:
-        movies.append(row)
+def LoadMovies(file):
+    movies = []
+    with open('./Out/movies.csv', newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
+        for row in spamreader:
+            movies.append(row)
+    movies.pop(0)
 
-movies.pop(0)
 
-
-def MoveFolders(folder):
+def MoveFolders(folder, movies):
     for movie in movies:
         quality = movie[3].replace("'", "")
         year = movie[2]
