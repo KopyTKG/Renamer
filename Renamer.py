@@ -25,9 +25,8 @@ def LoadMovies(file):
 
 def MoveFolders(folder, movies):
     for movie in movies:
-
-        NewName = f"{movie['folder']}/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}"
-        OldName = f"{movie['folder']}/{movie['title']} ({movie['year']}) [{movie['quality']}]"
+        NewName = f"{folder}/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}"
+        OldName = f"{folder}/{movie['title']} ({movie['year']}) [{movie['quality']}]"
 
         if not os.path.exists(NewName):
             print(f"moving {OldName} to {NewName}")
