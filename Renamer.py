@@ -12,14 +12,14 @@ def LoadMovies(file):
             year = row[2]
             title = row[1][1:-1]
             ide = row[0].replace("'", "")
-
+            if ide == "id":
+                continue
             movies.append({
-                "id": ide,
+                "id": int(ide),
                 "title": title,
-                "year": year,
+                "year": int(year),
                 "quality": quality
             })
-    movies.pop(0)
     return movies
 
 
