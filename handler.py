@@ -1,6 +1,7 @@
 import requests, os, json
 from dotenv import load_dotenv
 from pymongo import MongoClient
+from datetime import datetime
 
 load_dotenv()
 
@@ -62,6 +63,8 @@ def Parser(movie, response):
             }
         ], 
         "rating": vote,
+        "createdAt": datetime.now(),
+        "updatedAt": datetime.now()
 
     }
 
