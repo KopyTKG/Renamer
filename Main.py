@@ -2,6 +2,7 @@ import os
 from typing import Any
 from Queue import Queue
 from Renamer import MoveFolders, LoadMovies
+from handler import MainCycle
 
 os.system("./MoviesGrep.sh")
 
@@ -54,7 +55,8 @@ def Main():
         with open(Locations["output"], "w") as f:
             pass
 
-    # Creating left file if it doesn't exist
+    # Creating left file if it doesn't exist        ide = movie[0].replace("'", "")
+
     # File is used to keep memory of untagged movies
     if not os.path.exists(Locations["left"]):
         with open(Locations["movies"], "r") as f:
@@ -128,3 +130,4 @@ if __name__ == "__main__":
     CleanUp()
     movies = LoadMovies(Locations["csv"])
     MoveFolders(Locations["base"], movies)
+    MainCycle(movies)

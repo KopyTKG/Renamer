@@ -8,20 +8,26 @@ def LoadMovies(file):
     with open('./Out/movies.csv', newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
-            movies.append(row)
+            quality = row[3].replace("'", "")
+            year = row[2]
+            title = row[1][1:-1]
+            ide = row[0].replace("'", "")
+
+            movies.append({
+                "id": ide,
+                "title": title,
+                "year": year,
+                "quality": quality
+            })
     movies.pop(0)
     return movies
 
 
 def MoveFolders(folder, movies):
     for movie in movies:
-        quality = movie[3].replace("'", "")
-        year = movie[2]
-        title = movie[1][1:-1]
-        ide = movie[0].replace("'", "")
 
-        NewName = f"{folder}/{title} ({year}) [{quality}] #{ide}"
-        OldName = f"{folder}/{title} ({year}) [{quality}]"
+        NewName = f"{movie['folder']}/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}"
+        OldName = f"{movie['folder']}/{movie['title']} ({movie['year']}) [{movie['quality']}]"
 
         if not os.path.exists(NewName):
             print(f"moving {OldName} to {NewName}")
