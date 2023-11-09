@@ -2,17 +2,18 @@ import requests, os, json
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
+from Renamer import LoadMovies
 
 load_dotenv()
 
-def DB():
+def DB(collectioName="Movie"):
     # Provide the mongodb atlas url to connect python to mongodb using pymongo
    CONNECTION_STRING = os.getenv("CONNECTION_STRING")
  
    # Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
    client = MongoClient(CONNECTION_STRING)
    dbname = client["MongoMovieDB"]
-   collection = dbname["Movie"]
+   collection = dbname[collectioName]
    return collection
  
 
@@ -33,18 +34,26 @@ def Parser(movie, response):
     poster = ""
     backdrop = ""
     vote = 0
+    tagline = ""
 
     try:
         overview = response["Overview"]
         poster = response["Poster_path"]
         backdrop = response["Backdrop_path"]
         vote = response["Vote_average"]
+        tagline = response["Tagline"]
     except:
         overview = response["overview"]    
         poster = response["poster_path"]
         backdrop = response["backdrop_path"]
         vote = response["vote_average"]
+        tagline = response["tagline"]
     
+    geners = []
+
+    for genre in response["genres"]:
+        geners.append(genre["id"])
+
     return {
         "_id": movie["id"],
         "imdb_id": response["imdb_id"],
@@ -63,6 +72,8 @@ def Parser(movie, response):
             }
         ], 
         "rating": vote,
+        "tagline": tagline,
+        "genres": geners,
         "createdAt": datetime.now(),
         "updatedAt": datetime.now()
 
@@ -80,3 +91,4 @@ def MainCycle(movies):
         response = HandleAPI(movie["id"])
         movie = Parser(movie, response)
         Inject(movie, collection)
+
