@@ -1,4 +1,4 @@
-import requests, os, json
+import requests, os, json, csv
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
@@ -74,7 +74,7 @@ def Parser(movie, response):
         "rating": vote,
         "tagline": tagline,
         "genres": geners,
-        "createdAt": datetime.now(),
+        "createdAt": datetime.fromtimestamp(os.stat(f"../Movies/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}").st_ctime),
         "updatedAt": datetime.now()
 
     }
@@ -91,4 +91,3 @@ def MainCycle(movies):
         response = HandleAPI(movie["id"])
         movie = Parser(movie, response)
         Inject(movie, collection)
-

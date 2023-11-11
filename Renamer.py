@@ -3,7 +3,7 @@ import csv
 
 
 
-def LoadMovies(file):
+def LoadMovies():
     movies = []
     with open('./Out/movies.csv', newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
