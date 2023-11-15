@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
 from Renamer import LoadMovies
+from random import choice
 
 load_dotenv()
 
@@ -49,10 +50,10 @@ def Parser(movie, response):
         vote = response["vote_average"]
         tagline = response["tagline"]
     
-    geners = []
+    genres = []
 
     for genre in response["genres"]:
-        geners.append(genre["id"])
+        genres.append(genre["name"])
 
     return {
         "_id": movie["id"],
@@ -71,9 +72,10 @@ def Parser(movie, response):
                 'src': poster,
             }
         ], 
+        'language': 'en-US',
         "rating": vote,
         "tagline": tagline,
-        "genres": geners,
+        "genres": genres,
         "createdAt": datetime.fromtimestamp(os.stat(f"../Movies/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}").st_ctime),
         "updatedAt": datetime.now()
 
@@ -91,3 +93,6 @@ def MainCycle(movies):
         response = HandleAPI(movie["id"])
         movie = Parser(movie, response)
         Inject(movie, collection)
+
+
+

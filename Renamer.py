@@ -3,9 +3,9 @@ import csv
 
 
 
-def LoadMovies():
+def LoadMovies(Path):
     movies = []
-    with open('./Out/movies.csv', newline='') as csvfile:
+    with open(Path, newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
             quality = row[3].replace("'", "")
