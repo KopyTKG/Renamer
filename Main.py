@@ -16,11 +16,12 @@ Locations = {
 
 
 class Movie():
-    def __init__(self, title: str, year: int, quality: str):
+    def __init__(self, title: str, year: int, quality: str, language: str):
         self._title = title
         self._year = year
         self._quality = quality
         self._id = 0
+        self._language = language
     
     def setId(self, id: int):
         self._id = id
@@ -32,7 +33,7 @@ class Movie():
     def title(self, new_title):
         self._title = new_title
     def __str__(self):
-        return f"{self._id},'{self._title}',{self._year},'{self._quality}'"
+        return f"{self._id},'{self._title}',{self._year},'{self._quality}','{self._language}'"
 
 
 def addToClipBoard(text):
@@ -43,7 +44,19 @@ def getData(data: str):
     title = (data.split("(")[0]).strip()
     year = data.split("(")[1].split(")")[0]
     quality = data.split("[")[1].split("]")[0] 
-    return Movie(title, year, quality)
+    try:
+        language = data.split("<")[1].split(">")[0]
+    except:
+        language = "en-US"
+
+    movie = Movie(title, year, quality, language)
+    try:
+        ide = (data.split('#')[1]).split(" ")[0]
+        movie.setId(ide)
+    except:
+        ...
+
+    return movie
 
 
 def Main():
@@ -88,9 +101,7 @@ def Main():
                 movie.setId(int(input(f"set id for \"{movie.title}\":")))
                 movies.push(movie)
             else:
-                ide = line.split("#")[1]  
                 movie = getData(line)
-                movie.setId(ide)
                 movies.push(movie)
     
             with open(Locations["left"], "w") as w:
@@ -105,18 +116,19 @@ def Main():
     with open(Locations["output"], "r") as f:
         lines = f.read()
         with open(Locations["csv"], "w") as w:
-            w.write("id,title,year,quality\n")
+            w.write("id,title,year,quality,language\n")
             for line in lines.split("\n"):
                 if line == "":
                     continue
-                line.replace("", "")
+                #line.replace("", "")
                 line = line.split(",")
                 settitle = lambda title: f"{title}"
                 ide = line[0]
                 year = line[2]
                 title = settitle(line[1])
                 quality = line[3]
-                w.write(f"{ide},{title},{year},{quality}\n")
+                language = line[4]
+                w.write(f"{ide},{title},{year},{quality},{language}\n")
 
 
 def CleanUp():

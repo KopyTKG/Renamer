@@ -1,6 +1,6 @@
 import os
 import csv
-
+from progress import start_progress, end_progress, progress
 
 
 def LoadMovies(Path):
@@ -8,6 +8,7 @@ def LoadMovies(Path):
     with open(Path, newline='') as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
+            language = row[4].replace("'", "")
             quality = row[3].replace("'", "")
             year = row[2]
             title = row[1][1:-1]
@@ -18,17 +19,25 @@ def LoadMovies(Path):
                 "id": int(ide),
                 "title": title,
                 "year": int(year),
-                "quality": quality
+                "quality": quality,
+                "language": language
             })
+    
     return movies
 
 
 def MoveFolders(folder, movies):
+    start_progress("Renaming Folders")
+    count = 0
     for movie in movies:
-        NewName = f"{folder}/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}"
+        count += 1        
+        NewName = f"{folder}/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']} <{movie['language']}>"
         OldName = f"{folder}/{movie['title']} ({movie['year']}) [{movie['quality']}]"
 
         if not os.path.exists(NewName):
-            print(f"moving {OldName} to {NewName}")
             os.rename(OldName, NewName)
+        
+        progress((100 * count) // len(movies))
+    end_progress()
+
 

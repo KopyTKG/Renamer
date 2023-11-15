@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime
 from Renamer import LoadMovies
+from progress import *
 from random import choice
 
 load_dotenv()
@@ -72,11 +73,11 @@ def Parser(movie, response):
                 'src': poster,
             }
         ], 
-        'language': 'en-US',
+        'language': movie["language"],
         "rating": vote,
         "tagline": tagline,
         "genres": genres,
-        "createdAt": datetime.fromtimestamp(os.stat(f"../Movies/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']}").st_ctime),
+        "createdAt": datetime.fromtimestamp(os.stat(f"../Movies/{movie['title']} ({movie['year']}) [{movie['quality']}] #{movie['id']} <{movie['language']}>").st_ctime),
         "updatedAt": datetime.now()
 
     }
@@ -86,13 +87,22 @@ def Inject(object, db):
         db.insert_one(object)
     except:
         pass
-    
+
+
+
 def MainCycle(movies):
     collection = DB()
+    count = 0
+    start_progress("Updating Database")
     for movie in movies:
+        count += 1
+        progress((100 * count) // len(movies))
         response = HandleAPI(movie["id"])
         movie = Parser(movie, response)
         Inject(movie, collection)
+    end_progress()
+    
+
 
 
 
