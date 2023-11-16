@@ -1,6 +1,5 @@
-import os
-import csv
-from progress import start_progress, end_progress, progress
+import os, csv
+from classes.progress import start_progress, end_progress, progress
 
 
 def LoadMovies(Path):

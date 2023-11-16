@@ -1,8 +1,14 @@
 import os
 from typing import Any
-from Queue import Queue
-from Renamer import MoveFolders, LoadMovies
-from handler import MainCycle
+
+# classes
+from classes.queue import *
+from classes.file import *
+from classes.db import *
+from classes.progress import *
+from classes.api import *
+from classes.parser import *
+
 
 os.system("./MoviesGrep.sh")
 
@@ -137,9 +143,30 @@ def CleanUp():
     os.remove(Locations["movies"])
     print(f"files ({Locations['left']}, {Locations['output']} {Locations['movies']}) were removed")
 
+
+
 if __name__ == "__main__":
-    Main()
-    CleanUp()
+    # Data parsing
+    # - Main()
+    # TMP dump clean up
+    # - CleanUp()
+    # Loading parsed
     movies = LoadMovies(Locations["csv"])
-    MoveFolders(Locations["base"], movies)
-    MainCycle(movies)
+    # Renaming folders
+    # - MoveFolders(Locations["base"], movies)
+    # Updating database
+    collection = DB()
+    
+    count = 0
+    start_progress("Updating Database")
+    for movie in movies:
+        count += 1
+        progress((100 * count) // len(movies))
+        data = FetchMovie(movie["id"])
+        videos = FetchVideos(movie["id"])
+
+        # - parsed = Parser(movie, data, videos)
+        #query = ({"_id": movie["id"]}, {"$set": parsed})
+        collection.update_one({"_id": movie["id"]}, {"$set": {'videos': videos}})
+        # - Inject(movie, collection)
+    end_progress()
