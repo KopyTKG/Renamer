@@ -21,18 +21,15 @@ def FetchVideos(id):
     }
     response = requests.get(url, headers=headers)
     response = json.loads(response.text)
-    parsed = ParseVideosToArray(response)
-    return parsed
+    return response
 
+def FetchArtwork(id):
+    url = f"https://api.themoviedb.org/3/movie/{id}/images"
+    headers = {
+        "accept": "application/json",
+        "Authorization": os.getenv("Auth")
+    }
+    response = requests.get(url, headers=headers)
+    response = json.loads(response.text)
+    return response
 
-def ParseVideosToArray(response):
-    videos = []
-    for video in response["results"]:
-        parsedVideo = {
-            "key": video["key"],
-            "type": video["type"],
-            "name": video["name"],
-            "published_at": video["published_at"]
-        }
-        videos.append(parsedVideo)
-    return videos

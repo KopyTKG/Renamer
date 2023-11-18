@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 
 
-def Parser(movie, response, videos):
+def ParseMovie(movie, response, videos):
     overview = ""
     poster = ""
     backdrop = ""
@@ -53,3 +53,33 @@ def Parser(movie, response, videos):
         "updatedAt": datetime.now()
 
     }
+
+def ParseArtwork(response):
+    try:
+        posters = { "_id": response["id"], "data": response["posters"] }
+        backdrops = { "_id": response["id"], "data": response["backdrops"] }
+        logos = { "_id": response["id"], "data": response["logos"] }
+
+        return {
+            "posters": posters,
+            "backdrops": backdrops,
+            "logos": logos
+        }
+    except:
+        return {
+            "posters": [],
+            "backdrops": [],
+            "logos": []
+        }
+        
+def ParseVideosToArray(response):
+    videos = []
+    for video in response["results"]:
+        parsedVideo = {
+            "key": video["key"],
+            "type": video["type"],
+            "name": video["name"],
+            "published_at": video["published_at"]
+        }
+        videos.append(parsedVideo)
+    return videos

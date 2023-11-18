@@ -144,6 +144,13 @@ def CleanUp():
     print(f"files ({Locations['left']}, {Locations['output']} {Locations['movies']}) were removed")
 
 
+def Check(MovieId, Collection):
+    try:
+        Collection.find({"_id": MovieId})[0]
+        return True
+    except:
+        return False
+
 
 if __name__ == "__main__":
     # Data parsing
@@ -155,18 +162,48 @@ if __name__ == "__main__":
     # Renaming folders
     # - MoveFolders(Locations["base"], movies)
     # Updating database
-    collection = DB()
-    
+    MoviesCollection = DB()
+    PostresCollection = DB("Posters")
+    LogosCollection = DB("Logos")
+    BackdropsCollection = DB("Backdrops")
+
     count = 0
-    start_progress("Updating Database")
+    start_progress("Inserting into Database")
     for movie in movies:
         count += 1
         progress((100 * count) // len(movies))
-        data = FetchMovie(movie["id"])
-        videos = FetchVideos(movie["id"])
+        
+        if not Check(movie["id"], MoviesCollection):
+            #data fetching
+            data = FetchMovie(movie["id"])
+            RawVideos = FetchVideos(movie["id"])
+            # data parsing
+            parsedVideos = ParseVideosToArray(RawVideos)
+            parsed = ParseMovie(movie, data, parsedVideos)
+            # data injection
+            Inject(movie, MoviesCollection)
 
-        # - parsed = Parser(movie, data, videos)
-        #query = ({"_id": movie["id"]}, {"$set": parsed})
-        collection.update_one({"_id": movie["id"]}, {"$set": {'videos': videos}})
-        # - Inject(movie, collection)
+        parseArtwork = {}
+        
+        if not Check(movie["id"], PostresCollection) or not Check(movie["id"], LogosCollection) or not Check(movie["id"], BackdropsCollection):
+            #data fetching
+            RawArtwork = FetchArtwork(movie["id"])
+
+            # data parsing
+            parsedArtwork = ParseArtwork(RawArtwork)
+
+        
+        if not Check(movie["id"], PostresCollection):
+            # data injection
+            Inject(parsedArtwork["posters"], PostresCollection)
+
+        if not Check(movie["id"], BackdropsCollection):
+            # data injection
+            Inject(parsedArtwork["backdrops"], BackdropsCollection)
+
+        if not Check(movie["id"], LogosCollection):
+            # data injection
+            Inject(parsedArtwork["logos"], LogosCollection)
+
+
     end_progress()
