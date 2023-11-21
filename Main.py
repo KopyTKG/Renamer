@@ -162,7 +162,7 @@ if __name__ == "__main__":
     # Renaming folders
     # - MoveFolders(Locations["base"], movies)
     # Updating database
-    MoviesCollection = DB()
+    MoviesCollection = DB("Movie")
     PostresCollection = DB("Posters")
     LogosCollection = DB("Logos")
     BackdropsCollection = DB("Backdrops")
@@ -181,7 +181,7 @@ if __name__ == "__main__":
             parsedVideos = ParseVideosToArray(RawVideos)
             parsed = ParseMovie(movie, data, parsedVideos)
             # data injection
-            Inject(movie, MoviesCollection)
+            Inject(parsed, MoviesCollection)
 
         parseArtwork = {}
         
