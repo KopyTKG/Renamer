@@ -1,0 +1,40 @@
+{
+  "name": "renamer",
+  "version": "1.0.0",
+  "description": "Backend app for the movies.thekrew.app site.",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "nodemon server.ts",
+    "build": "rm -rf build/ && cd source/ && tsc",
+    "lint": "eslint ./*.ts",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write './*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kopytkg/Renamer.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "Typescript",
+    "MongoDB"
+  ],
+  "author": "KopyTKG",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kopytkg/Renamer/issues"
+  },
+  "homepage": "https://github.com/kopytkg/Renamer#readme",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
+  }
+}
