@@ -1,37 +1,31 @@
 import fs from 'fs'
+import LogCreate from './LogCreate'
 
-class Mover {
-  private oldName: string
-  private newName: string
-
-  private static instance: Mover
-
-  private constructor() {}
-
-  public static get Instance(): Mover {
-    if (!this.instance) {
-      this.instance = new Mover()
-    }
-    return this.instance
+class FolderCreater {
+  private _data = {
+    movies: [],
+  }
+  constructor(private logger: LogCreate) {
+    this.logger.on('logCreated', () => {
+      this.Load()
+      this.Create()
+    })
   }
 
-  public set OldName(oldName: string) {
-    this.oldName = oldName
+  public Load() {
+    this._data = JSON.parse(fs.readFileSync('./Out/zdump.json', 'utf8'))
   }
 
-  public set NewName(newName: string) {
-    this.newName = newName
+  public IsPossible(path: string): boolean {
+    return fs.existsSync('./Data/' + path)
   }
-
-  public get IsMovePossible(): boolean {
-    return fs.existsSync(this.oldName)
-  }
-  public Move() {
-    if (!this.oldName || !this.newName) {
-      throw new Error('Old name or new name not set')
-    }
-    fs.renameSync(this.oldName, this.newName)
+  public Create(): void {
+    this._data.movies?.forEach((path) => {
+      if (!this.IsPossible(JSON.stringify(path))) {
+        fs.mkdirSync('./Data/' + JSON.stringify(path))
+      }
+    })
   }
 }
 
-export default Mover
+export default FolderCreater
