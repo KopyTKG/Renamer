@@ -3,7 +3,7 @@ import fs from 'fs'
 import JSONFile from './JSON'
 
 class JSONBuilder implements IFile {
-  private _xml: JSONFile
+  private _json: JSONFile
   private _extension = '.json'
 
   constructor() {
@@ -11,7 +11,7 @@ class JSONBuilder implements IFile {
   }
 
   public reset(): void {
-    this._xml = new JSONFile()
+    this._json = new JSONFile()
   }
 
   public Create(path: string): void {
@@ -19,15 +19,15 @@ class JSONBuilder implements IFile {
   }
 
   public Add(data: unknown): void {
-    this._xml.push(data)
+    this._json.push(data)
   }
 
   public Flush(path: string): void {
-    this._xml.WriteFile(path + this._extension)
+    this._json.WriteFile(path + this._extension)
   }
 
   public Read(path: string): Array<unknown> {
-    return this._xml.ReadFile(path + this._extension)
+    return this._json.ReadFile(path + this._extension)
   }
 }
 

@@ -1,4 +1,5 @@
 import IFile from '../interfaces/IFIle'
+import MovieCollection from './MovieStucture'
 
 class OutputHandler {
   private _builder: IFile
@@ -17,15 +18,17 @@ class OutputHandler {
     this._filename = filename
   }
 
-  public WriteOutput(data: Array<unknown>): void {
+  public WriteOutput(data: MovieCollection): void {
     if (!this._builder) {
       return
     }
     if (this._filename) {
       this._builder.Create(this._filename)
-      data.map((movie) => {
-        this._builder.Add(movie)
-      })
+      const iter = data.getIterator()
+      while (iter.valid()) {
+        this._builder.Add(iter.current())
+        iter.next()
+      }
       this._builder.Flush(this._filename)
     } else {
       return

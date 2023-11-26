@@ -1,13 +1,14 @@
-import { log } from 'console'
 import EventEmitter from 'events'
 import OutputHandler from './File.director'
 import XMLBuilder from './XML.builder'
 import JSONBuilder from './JSON.builder'
+import Settings from './Settings'
+import MovieCollection from './MovieStucture'
 
 class LogCreate extends EventEmitter {
   private static _instance: LogCreate
 
-  private _data: Array<string>
+  private _data: MovieCollection
 
   private _json: JSONBuilder
   private _xml: XMLBuilder
@@ -15,14 +16,10 @@ class LogCreate extends EventEmitter {
 
   private constructor() {
     super()
-    this._data = []
+    this._data = new MovieCollection()
     this._json = new JSONBuilder()
     this._xml = new XMLBuilder()
     this._director = new OutputHandler()
-
-    this.on('newListener', (event: string) => {
-      log(event)
-    })
   }
 
   public static Instance(): LogCreate {
@@ -32,7 +29,7 @@ class LogCreate extends EventEmitter {
     return this._instance
   }
 
-  public set Data(data: Array<string>) {
+  public set Data(data: MovieCollection) {
     this._data = data
   }
 
@@ -40,7 +37,8 @@ class LogCreate extends EventEmitter {
     if (!this._data) {
       return
     }
-    const path = './Out/zdump'
+    const config = Settings.Instance.Data
+    const path = `${config.LogFolder}zdump`
     this._director.Filename = path
 
     this._director.FileType = this._json

@@ -7,13 +7,18 @@ class XMLFile {
     this._movies = []
   }
 
-  public push(data: unknown) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public push(data: any) {
     if (!data) {
       return
     }
-    //id,title,year,quality,language
-    const movie = data.toString().split(',')
-    const parsed = `<movie>\n <id>${movie[0]}</id>\n <title>${movie[1]}</title>\n <year>${movie[2]}</year>\n <quality>${movie[3]}</quality>\n <language>${movie[4]}</language>\n </movie>`
+    const id = `<id>${data.id}</id>`
+    const title = `<title>${data.title}</title>`
+    const year = `<year>${data.year}</year>`
+    const quality = `<quality>${data.quality}</quality>`
+    const language = `<language>${data.language}</language>`
+
+    const parsed = `<movie>\n ${id}\n ${title}\n ${year}\n ${quality}\n ${language}\n</movie>`
     this._movies.push(parsed)
   }
 

@@ -7,18 +7,18 @@ class JSONFile {
     this._movies = []
   }
 
-  public push(data: unknown) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public push(data: any) {
     if (!data) {
       return
     }
     //id,title,year,quality,language
-    const movie = data.toString().split(',')
     const parsed = {
-      id: movie[0],
-      title: movie[1],
-      year: movie[2],
-      quality: movie[3],
-      language: movie[4],
+      id: data.id,
+      title: data.title,
+      year: data.year,
+      quality: data.quality,
+      language: data.language,
     }
     this._movies.push(parsed)
   }
